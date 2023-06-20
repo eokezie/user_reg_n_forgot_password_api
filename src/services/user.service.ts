@@ -1,8 +1,8 @@
 import User from "../models/user.model";
 
 const getUserEmail = async (email: string) => {
-    const user = await User.where({ email: email });
-    return user;
+    const query = User.where({ email: email });
+	return await query.findOne();
 }
 
 export default getUserEmail;

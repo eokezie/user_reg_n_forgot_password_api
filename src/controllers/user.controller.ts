@@ -5,7 +5,9 @@ import Dummy from "../models/dummy.model";
 
 import getUserEmail from "../services/user.service";
 import { randomOTP } from "../utils/randomOtp";
-import { TUserRegRequest } from "../types/user.types";
+import { generateUToken } from '../utils/generateUserToken'
+import { TUserRegRequest, TResquestBody } from "../types/user.types";
+import { successResponse } from "../utils/successResponse";
 
 /**
  * @route POST /api/users/register
@@ -41,10 +43,6 @@ const createUser = async (req: Request, res: Response) => {
                 brokerCode
             });
 
-            // const payload = { id: newUser._id };
-            // const options = { subject: email, audience: application };
-            // const signedToken = 
-
             /**
              * Logger function being saved to the DB
              * Function to send email to users after account creations
@@ -63,4 +61,59 @@ const createUser = async (req: Request, res: Response) => {
     } catch (error) {
         
     }
+};
+
+/**
+ * @route POST /api/users/login
+ * @method POST
+ */
+const userLogin = async (req: Request, res: Response) => {
+    const { email, password }: TResquestBody = req.body;
+
+    try {
+        if (!email || !password) {
+            throw new Error("Please provide correct credentials");
+        }
+
+        const user = await getUserEmail(email);
+        
+        if (
+            !user ||
+            !bcrypt.compareSync(password, user.password!)
+        ) {
+            res.status(404).send("Invalid credentials provided");
+        }
+
+        if ( user ) {
+            const responseBody = {
+                _id: user?._id,
+                name: user?.name,
+                email: user?.email,
+                phone: user?.phone,
+                brokerCode: user?.brokerCode,
+                type: user?.type,
+                __v: user?.__v,
+                created_at: user?.createdAt,
+                updated_at: user?.updatedAt,
+                token: generateUToken(user?._id),
+            };
+            const responseMessage = 'User authenticated successfully'
+
+            res.status(201)
+                .json(successResponse(
+                    responseBody,
+                    responseMessage
+                ))
+        } else {
+            res.status(404).send("User not found");
+        };
+
+    }catch (error) {
+        res.status(404).send('Something went wrong')
+    }
+}
+
+export {
+    createUser,
+    userLogin
 }

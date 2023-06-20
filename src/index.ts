@@ -1,12 +1,22 @@
 import express, { Application } from 'express';
+import dotenv from "dotenv";
 
+import { errorHandler } from './utils/errorHandler';
 import { connectDB } from './config/db'; 
+import userRouter from './routes/user.route';
+
+dotenv.config();
+
+await connectDB();
 
 const app: Application = express();
 
 app.use(express.json());
 
-await connectDB();
+// API Routes
+app.use('/api/user', userRouter);
+
+app.use(errorHandler);
 
 const startServer = (port: string | number) => {
     try {

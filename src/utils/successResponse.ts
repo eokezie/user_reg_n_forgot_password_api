@@ -1,6 +1,6 @@
 export const successResponse = (
-	message: string,
-	responseData: object | null
+	responseData: object | null,
+    message: string,
 ): object => {
 	return {
 		success: true,
