@@ -11,7 +11,7 @@ import { getUserEmail,
  } from "../services/user.service";
 import { randomOTP } from "../utils/randomOtp";
 import { generateUToken } from '../utils/generateUserToken'
-import { TUserRegRequest, TResquestBody } from "../types/user.types";
+import { TUserRegRequest, TResquestBody, TUserReest } from "../types/user.types";
 import { successResponse } from "../utils/successResponse";
 
 /**
@@ -173,7 +173,7 @@ const forgotPassword = async (req: Request, res: Response) => {
  * @method POST
  */
 const resetUserPassword = async (req: Request, res: Response) => {
-    const { otp, password, confirmPassword, user_id, token } = req.body;
+    const { otp, password, confirmPassword, user_id, token }: TUserReest = req.body;
 
     try {
         const getToken = await getUserToken(token); //Confirm a Users Token

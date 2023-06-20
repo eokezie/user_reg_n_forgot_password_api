@@ -22,3 +22,11 @@ export type TDummyUser = {
     expired: Date,
     token?: string
 }
+
+export type TUserReest = {
+    otp: string, 
+    password: string, 
+    confirmPassword: string, 
+    user_id: Types.ObjectId, 
+    token: string
+}
