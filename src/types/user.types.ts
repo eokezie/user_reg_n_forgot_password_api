@@ -15,3 +15,10 @@ export type TResquestBody = {
 	email: string;
 	password: string;
 };
+
+export type TDummyUser = {
+    email: string,
+    otp: number,
+    expired: Date,
+    token?: string
+}
