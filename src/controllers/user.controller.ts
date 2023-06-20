@@ -7,7 +7,8 @@ import Dummy from "../models/dummy.model";
 import { getUserEmail,
     getDummyUser,
     findUserandUpdate,
-    getUserToken
+    getUserToken,
+    deleteDummyUser
  } from "../services/user.service";
 import { randomOTP } from "../utils/randomOtp";
 import { generateUToken } from '../utils/generateUserToken'
@@ -198,7 +199,7 @@ const resetUserPassword = async (req: Request, res: Response) => {
         const update = await findUserandUpdate(user_id, hashedPassword); //Update Users Id
 
         if ( update && getToken ) {
-            await Dummy.findByIdAndDelete(getToken._id);
+            await deleteDummyUser(getToken._id)
 
             res.status(201).json({
                 message: "Password updated successfully",

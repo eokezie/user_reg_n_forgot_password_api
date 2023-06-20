@@ -41,10 +41,16 @@ const getUserToken = async (token: string) => {
 	return await query.findOne();
 };
 
+const deleteDummyUser = async (token: Types.ObjectId) => {
+    const query = Dummy.where({ token });
+	return await query.deleteOne();
+}
+
 
 export {
     getUserEmail,
     getDummyUser,
     findUserandUpdate,
-    getUserToken
+    getUserToken,
+    deleteDummyUser
 };
