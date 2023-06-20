@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import moment from 'moment';
-import User from "../models/user.model";
 
-import { getUserEmail,
+import { 
+    getUserEmail,
     getDummyUser,
     findUserandUpdate,
     getUserToken,
@@ -14,6 +14,7 @@ import { randomOTP } from "../utils/randomOtp";
 import { generateUToken } from '../utils/generateUserToken'
 import { TUserRegRequest, TResquestBody, TUserReest } from "../types/user.types";
 import { successResponse } from "../utils/successResponse";
+import { logger } from "../lib/logger";
 
 /**
  * @route POST /api/users/register
@@ -55,6 +56,7 @@ const createUser = async (req: Request, res: Response) => {
              * Logger function being saved to the DB
              * Function to send email to users after account creations
              */
+            logger.info(`${email}, created a new account`, { metadata: req.body });
 
             return res.status(201).json({
                 message: "User created successfully",
@@ -108,6 +110,8 @@ const userLogin = async (req: Request, res: Response) => {
             };
             const responseMessage = 'User authenticated successfully'
 
+            logger.info(`${email}, logged into their account`, { metadata: req.body });
+
             res.status(201)
                 .json(successResponse(
                     responseBody,
@@ -151,6 +155,7 @@ const forgotPassword = async (req: Request, res: Response) => {
                 /** 
                  * A function to send email to user after OTP is sent and log users action to DB
                 */
+               logger.info(`Email with OTP was sent to ${email}`, { metadata: req.body });
                console.log('User token ====', dummy.token)
                console.log('User OTP ====', dummy.otp)
 
@@ -201,6 +206,8 @@ const resetUserPassword = async (req: Request, res: Response) => {
 
         if ( update && getToken ) {
             await deleteDummyUser(getToken._id)
+
+            logger.info(`${update?.email}, just recovered account`, { metadata: req.body });
 
             res.status(201).json({
                 message: "Password updated successfully",
