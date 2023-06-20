@@ -1,9 +1,12 @@
 import express, { Application } from 'express';
 
+import { connectDB } from './config/db'; 
 
 const app: Application = express();
 
 app.use(express.json());
+
+await connectDB();
 
 const startServer = (port: string | number) => {
     try {
