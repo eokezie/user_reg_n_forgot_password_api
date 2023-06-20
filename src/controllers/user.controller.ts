@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import moment from 'moment';
 import User from "../models/user.model";
-import Dummy from "../models/dummy.model";
 
 import { getUserEmail,
     getDummyUser,
     findUserandUpdate,
     getUserToken,
-    deleteDummyUser
+    deleteDummyUser,
+    createNewUser
  } from "../services/user.service";
 import { randomOTP } from "../utils/randomOtp";
 import { generateUToken } from '../utils/generateUserToken'
@@ -41,13 +41,14 @@ const createUser = async (req: Request, res: Response) => {
         if ( !user ) {
             const hashedPassword = await bcrypt.hash(password, 12);
 
-            const newUser = await User.create({
+            const newUser = await createNewUser({
                 name,
                 email,
-                password: hashedPassword,
-                phone,
+                brokerCode,
                 type,
-                brokerCode
+                phone,
+                password: hashedPassword,
+                application
             });
 
             /**

@@ -3,12 +3,32 @@ import Dummy from "../models/dummy.model";
 import { v4 as uuidv4 } from 'uuid';
 import { Types } from "mongoose";
 
-import { TDummyUser } from "../types/user.types";
+import { TDummyUser, TUserRegRequest } from "../types/user.types";
 
 const getUserEmail = async (email: string) => {
     const query = User.where({ email: email });
 	return await query.findOne();
 }
+
+const createNewUser = async ({
+    name,
+    email,
+    password,
+    phone,
+    type,
+    brokerCode
+}: TUserRegRequest) => {
+    const newUser = await User.create({
+        name,
+        email,
+        password,
+        phone,
+        type,
+        brokerCode
+    })
+
+    return newUser
+};
 
 const getDummyUser = async ({
     email,
@@ -52,5 +72,6 @@ export {
     getDummyUser,
     findUserandUpdate,
     getUserToken,
-    deleteDummyUser
+    deleteDummyUser,
+    createNewUser
 };
